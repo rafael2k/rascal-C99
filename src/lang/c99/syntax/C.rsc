@@ -103,6 +103,7 @@ syntax AnonymousIdentifier = ;
 
 keyword Keyword 
 	= "auto" 
+	| "bool" 
 	| "break" 
 	| "case" 
 	| "char" 
@@ -168,6 +169,7 @@ syntax StorageClass
 syntax TypeSpecifier 
 	= identifier: Identifier 
 	| \void: "void" 
+	| \bool: "bool" 
 	| char: "char" 
 	| short: "short" 
 	| \int: "int" 
