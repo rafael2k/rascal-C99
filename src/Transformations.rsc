@@ -1,3 +1,16 @@
+/*
+
+Author: Rafael Diniz
+Professor: Rodrigo Bonifácio de Almeida
+
+Some transformations based in Coccinelle semantic patch present in the article:
+ 
+Rodriguez, Luis R., and Julia Lawall. "Increasing Automation in the 
+Backporting of Linux Drivers Using Coccinelle." Dependable Computing 
+Conference (EDCC), 2015 Eleventh European. IEEE, 2015.
+
+*/
+
 module Transformations
 
 import lang::c99::\syntax::C;
