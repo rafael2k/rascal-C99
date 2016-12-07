@@ -22,7 +22,7 @@ syntax Statement
 	| "switch" "(" Expression ")" Statement 
 	| "while" "(" Expression ")" Statement 
 	| "do" Statement "while" "(" Expression ")" ";" 
-	| "for" "(" Expression? ";" Expression? ";" Expression? ")" Statement 
+	| "for" "(" TypeSpecifier? Expression? ";" Expression? ";" Expression? ")" Statement 
 	| "goto" Identifier ";" 
 	| "continue" ";" 
 	| "break" ";" 
