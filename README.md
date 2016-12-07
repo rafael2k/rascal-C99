@@ -1,11 +1,13 @@
-rascal-C99 is a repository which contains C Transformations using
+# Rascal-C99
+
+Rascal-C99 is a repository which contains C Transformations using
 Rascal-MPL, and some C99 extensions to the C90 syntax definition which
 comes with Rascal-MPL.
 
 Usage, in Rascal Console:
 
-import Transformations;
-runTests(option);
+  import Transformations;
+  runTests(option);
 
 When "option" is a number between 1 and 5, each number corresponding to a
 different test located at "src/Transformations.rsc".
