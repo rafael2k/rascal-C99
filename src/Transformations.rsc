@@ -51,7 +51,79 @@ TranslationUnit conccinelle2_2(TranslationUnit unit) = visit(unit) {
 	 case (Expression) `netdev_attach_ops (<NonCommaExpression id1>)` => (Expression) `netdev_attach_ops (dev, <NonCommaExpression id1>)`
 };
 
+/* Cocinnelle semantic patch 3
+
+Here the code match in the first part is used to identifier we are
+in the correct file, and the second part make 2 lines insertion before
+one other line present in the file.
+
+@ simple_dev_pm depends on module_pci @
+identifier pdev, hw, sc;
+declarer name pci_dev;
+declarer name ieee80211;
+declarer name ath_softc;
+@@
++compat_pci_suspend(pci_suspend);
++compat_pci_resume(pci_resume);
+ath9k_stop_btcoex(sc);
+
+*/
+
+bool cocci_check_ids(TranslationUnit unit){
+	bool pdev = false, hw = false, sc = false, pci_dev = false,
+	 ieee80211_hw = false, ath_softc = false;
+
+	top-down visit(unit) {
+		case (Identifier) `pdev` : {
+			// println("pdev");
+			pdev = true;
+		}
+		case (Identifier) `hw` : {
+			// println("hw");
+			hw = true;
+		}
+		case (Identifier) `sc` : {
+			// println("sc");
+			sc = true;	
+		}
+		case (Identifier) `pci_dev` : {
+			// println("pci_dev");
+			pci_dev = true;	
+		}
+		case (Identifier) `ieee80211_hw` : {
+			// println("ieee80211_hw");
+			ieee80211_hw = true;	
+		}
+		case (Identifier) `ath_softc` : {
+			// println("ath_softc");
+			ath_softc = true;	
+		}
+	}
+	
+	return (pdev && hw && sc && pci_dev && ieee80211_hw && ath_softc);
+
+}
+
+TranslationUnit make_addition(TranslationUnit unit) = visit (unit) {
+	  case (Statement) `ath9k_stop_btcoex(sc);` => (Statement) `ath9k_stop_btcoex(sc);`
+// add... compat_pci_suspend(pci_suspend); compat_pci_resume(pci_resume); 
+};
+
 TranslationUnit conccinelle3(TranslationUnit unit) {
+
+	/* First we check if there is the match of of the identifiers */
+	if (cocci_check_ids(unit) == false){
+		return unit;
+	}
+
+	/* Make the code addition */
+	code = make_addition(unit);
+	return code;
+
+}
+
+
+TranslationUnit sometests(TranslationUnit unit) {
 
 	top-down visit(unit) {
     	case (Expression)`<Expression exp1>` : { 
@@ -112,6 +184,19 @@ TranslationUnit runTests(int option){
 		return conccinelle2(code);
 	}
 	
+	// other coccinelle example
+	if (option == 5){
+		code = parseaux(|project://rascal-C/c-source/teste5.c|);
+		return (code);
+	}
+	
+	// C99 for (int i = 0; i < n; ++i) { ... } construct (with the type modifier
+	// inside the for.
+	if (option == 5){
+		code = parseaux(|project://rascal-C/c-source/teste5.c|);
+		return (code);
+	}
+
 
 	// for visualization purposes...
     // render(visParsetree(code));
