@@ -16,9 +16,9 @@ module Transformations
 import lang::c99::\syntax::C;
 import IO;
 import ParseTree;
-import vis::Figure;
-import vis::ParseTree;
-import vis::Render;
+// import vis::Figure;
+// import vis::ParseTree;
+// import vis::Render;
 
 /* Simple C example based on the Java one */
 TranslationUnit transformNaiveIfStatement(TranslationUnit unit) = visit(unit) {
@@ -118,8 +118,7 @@ bool cocci_check_ids(TranslationUnit unit){
 }
 
 TranslationUnit make_addition(TranslationUnit unit) = visit (unit) {
-	  case (Statement) `ath9k_stop_btcoex(sc);` => (Statement) `ath9k_stop_btcoex(sc);`
-// add... compat_pci_suspend(pci_suspend); compat_pci_resume(pci_resume); 
+	  case (Statement) `ath9k_stop_btcoex(sc);` => (Statement) `ath9k_stop_btcoex(sc);` // (Statement) `compat_pci_suspend(pci_suspend);` (Statement) `compat_pci_resume(pci_resume);`
 };
 
 TranslationUnit conccinelle3(TranslationUnit unit) {
@@ -135,10 +134,12 @@ TranslationUnit conccinelle3(TranslationUnit unit) {
 
 }
 
-
 TranslationUnit sometests(TranslationUnit unit) {
 
 	top-down visit(unit) {
+		case (Statement) `ath9k_stop_btcoex(sc);` : {
+			println("AAALLOOOUU");
+		}
     	case (Expression)`<Expression exp1>` : { 
          println("Expr1 <exp1>"); 
 		}
@@ -175,41 +176,40 @@ TranslationUnit runTests(int option){
 
 	// C if sample 
 	if (option == 1){
-		code = parseaux(|project://rascal-C/c-source/teste1.c|);
+		code = parseaux(|file:///home/rafael2k/files/UnB/static_analysis/trabalho_final/rascal-C99/c-source/teste1.c|);
 		return transformNaiveIfStatement(code);
 	}
 
 	// coccinelle first example
 	if (option == 2){
-		code = parseaux(|project://rascal-C/c-source/teste2.c|);
+		code = parseaux(|file:///home/rafael2k/files/UnB/static_analysis/trabalho_final/rascal-C99/c-source/teste2.c|);
 		return conccinelle1(code);
 	}
 
 	// C99 bool feature
 	if (option == 3){
-		code = parseaux(|project://rascal-C/c-source/teste3.c|);
+		code = parseaux(|file:///home/rafael2k/files/UnB/static_analysis/trabalho_final/rascal-C99/c-source/teste3.c|);
 		return code;
 	}
 	
 	// netdev backport coccinelle
 	if (option == 4){
-		code = parseaux(|project://rascal-C/c-source/teste4.c|);
+		code = parseaux(|file:///home/rafael2k/files/UnB/static_analysis/trabalho_final/rascal-C99/c-source/teste4.c|);
 		return conccinelle2(code);
 	}
 	
 	// other coccinelle example
 	if (option == 5){
-		code = parseaux(|project://rascal-C/c-source/teste5.c|);
-		return (code);
+		code = parseaux(|file:///home/rafael2k/files/UnB/static_analysis/trabalho_final/rascal-C99/c-source/pci.c|);
+		return conccinelle3(code);
 	}
 	
 	// C99 for (int i = 0; i < n; ++i) { ... } construct (with the type modifier
 	// inside the for.
-	if (option == 5){
-		code = parseaux(|project://rascal-C/c-source/teste5.c|);
+	if (option == 6){
+		code = parseaux(|file:///home/rafael2k/files/UnB/static_analysis/trabalho_final/rascal-C99/c-source/teste5.c|);
 		return (code);
 	}
-
 
 	// for visualization purposes...
     // render(visParsetree(code));
